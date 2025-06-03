@@ -7,6 +7,8 @@ sys.setrecursionlimit(30000)
 
 grid = [[0 for i in range(45)] for j in range(45)]
 
+file_name = ""
+
 GRID_SIZE = 45
 
 colors = {
@@ -37,6 +39,8 @@ def plot_grid(squares):
     ax.set_ylim(0, GRID_SIZE)
     ax.set_aspect('equal')
     plt.gca().invert_yaxis()
+
+    #plt.savefig(f'output/{file_name}.png')
     plt.show()
 
 
@@ -55,8 +59,17 @@ def set_occupied(x, y, sz, val):
 def solve(x, y, squares, remaining_squares):
 
     if sum(remaining_squares) == 0 and x >= GRID_SIZE: 
-        print("Found solution")
-        plot_grid(squares)
+        row_x, row_y = squares[1][0][0], squares[1][0][1]
+        gridnum = int(file_name[-1]) - 1
+        grid_x = gridnum//3
+        grid_y = gridnum%3
+
+        char_x = (row_x+grid_x*45)%26 + ord('a') 
+        char_y = (row_y+grid_y*45)%26 + ord('a')
+
+        print(chr(char_x), chr(char_y))
+        #plot_grid(squares)
+
         return
 
     if x >= GRID_SIZE:
@@ -106,7 +119,7 @@ squares = {
 with open(sys.argv[1]) as squares_json:
     squares_data = json.load(squares_json)
 
-        
+    file_name = sys.argv[1].split(".")[0]
     
     # Convert string keys to integer keys
     squares = {int(k): v for k, v in squares_data.items()}
